@@ -1,4 +1,4 @@
-import * as T from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import * as T from 'three';
 
 function onWindowOnload(newFunction) {
 	let oldFunction = window.onload;
