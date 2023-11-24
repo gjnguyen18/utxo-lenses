@@ -69,6 +69,10 @@ export class TransactionsGrid {
             }
         }
     }
+
+    getBlocks() {
+        return this.blocks;
+    }
 }
 
 export class TransactionBlock {
@@ -76,23 +80,36 @@ export class TransactionBlock {
         this.transactions = transactions;
         this.node1 = node1;
         this.node2 = node2;
+        this.color = getColorFromRamp(COLORS, 0);
+        this.hlColor = new T.Color("white");
 
         let geometry = new T.BoxGeometry(BLOCK_WIDTH, this.transactions * HEIGHT_SCALE + MIN_HEIGHT, BLOCK_WIDTH);
         let material = new T.MeshPhongMaterial({ 
-            color: getColorFromRamp(COLORS, 0) 
+            color: this.color
         });
         this.cube = new T.Mesh(geometry, material);
         this.cube.position.y = (this.transactions * HEIGHT_SCALE / 2)
     }
 
     recolor(scale) {
-        this.cube.material.color = getColorFromRamp(COLORS, scale);
+        this.color = getColorFromRamp(COLORS, scale);
+        this.cube.material.color = this.color;
+
+        this.hlColor = getColorFromRamp([this.color, new T.Color("white")], 0.5);
     }
     
     setPosition(x, z) {
         this.cube.position.x = x;
         this.cube.position.z = z;
     }
+
+    toggleHighlight(highlight) {
+        if(highlight) {
+            this.cube.material.color = this.hlColor;
+        } else {
+            this.cube.material.color = this.color;
+        }
+    }   
 
     getCube() {
         return this.cube;
