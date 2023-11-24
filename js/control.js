@@ -44,6 +44,7 @@ export class SceneControl {
                 }
             })
         } else {
+            this.highlightedBlock.toggleHighlight(false);
             this.highlightedBlock = null;
         }
 
