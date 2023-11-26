@@ -7,6 +7,7 @@ const HEIGHT_SCALE = 1.0;
 const BLOCK_WIDTH = 1.0;
 const SPACING = 0.3;
 const MIN_HEIGHT = 0.5;
+const MAX_HEIGHT = 2;
 
 export class TransactionsGrid {
     constructor(scene) {
@@ -15,6 +16,7 @@ export class TransactionsGrid {
         this.scene = scene;
         this.blocks = [];
         this.canDrag = true;
+        this.canHover = true;
         this.displayFrom;
         this.displayTo;
         this.displayAmount;
@@ -44,6 +46,16 @@ export class TransactionsGrid {
         }
     }
 
+    loadData(data) {
+        data.nodes.forEach((i) => this.addNode(i));
+        data.transactions.forEach((t) => {
+            this.addTransaction(
+                t.from, 
+                t.to, 
+                t.amount);
+        })
+    }
+
     setBlocks() {
         console.log(this.transactions);
 
@@ -64,7 +76,7 @@ export class TransactionsGrid {
         for(let i = 0; i < nodeArray.length; i++) {
             for(let k = 0; k < nodeArray.length; k++) {
                 let amount = this.getTransaction(nodeArray[i].id, nodeArray[k].id);
-                this.blocks[i][k] = new TransactionBlock(nodeArray[i].id, nodeArray[k].id, amount);
+                this.blocks[i][k] = new TransactionBlock(nodeArray[i].id, nodeArray[k].id, amount, max);
                 this.blocks[i][k].setPosition(
                     (i - (nodeArray.length / 2)) * (BLOCK_WIDTH + SPACING), 
                     (k - (nodeArray.length / 2)) * (BLOCK_WIDTH + SPACING));
@@ -77,22 +89,33 @@ export class TransactionsGrid {
     getBlocks() {
         return this.blocks;
     }
+
+    clearBlocks() {
+        let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
+        for(let i = 0; i < nodeArray.length; i++) {
+            for(let k = 0; k < nodeArray.length; k++) {
+                this.scene.remove(this.blocks[i][k])
+            }
+        }
+        this.blocks = [];
+    }
 }
 
 export class TransactionBlock {
-    constructor(node1, node2, transactions) {
+    constructor(node1, node2, transactions, max) {
         this.transactions = transactions;
+        this.globalMax = max;
         this.node1 = node1;
         this.node2 = node2;
         this.color = getColorFromRamp(COLORS, 0);
         this.hlColor = new T.Color("white");
 
-        let geometry = new T.BoxGeometry(BLOCK_WIDTH, this.transactions * HEIGHT_SCALE + MIN_HEIGHT, BLOCK_WIDTH);
+        let geometry = new T.BoxGeometry(BLOCK_WIDTH, (this.transactions / this.globalMax) * MAX_HEIGHT + MIN_HEIGHT, BLOCK_WIDTH);
         let material = new T.MeshPhongMaterial({ 
             color: this.color
         });
         this.cube = new T.Mesh(geometry, material);
-        this.cube.position.y = (this.transactions * HEIGHT_SCALE / 2)
+        this.cube.position.y = (((this.transactions / this.globalMax) * MAX_HEIGHT + MIN_HEIGHT) / 2)
     }
 
     recolor(scale) {

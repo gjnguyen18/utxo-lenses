@@ -15,17 +15,21 @@ export class SceneControl {
         this.isMouseHold = false;
         this.cameraAccel = new T.Vector2();
         this.highlightedBlock = null;
+        this.clickedBlock = null;
     }
 
-    onMouseMove(event) {
+    mouseUpdate() {
         // mouse update
         this.lastMouse.x = this.mouse.x;
         this.lastMouse.y = this.mouse.y;
 
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-		this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    }
 
-        // console.log(this.mouse.x, this.mouse.y)
+    onMouseMove(event) {
+        // mouse update
+        this.mouseUpdate()
 
         // object highlight
         let blocks = this.transactionsGrid.getBlocks();
@@ -33,7 +37,7 @@ export class SceneControl {
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
         let intersect = this.raycaster.intersectObjects(cubeMeshes, false);
-        if(intersect.length > 0) {
+        if(intersect.length > 0 && this.transactionsGrid.canHover) {
             let intersectObj = intersect[0].object;
             blocks.flat().forEach(block => {
                 if(intersectObj == block.getCube()) {
@@ -73,17 +77,21 @@ export class SceneControl {
     }
 
     onMouseDown(event) {
+        this.mouseUpdate()
         this.isMouseHold = true;
         if(this.highlightedBlock) {
-            let block = this.highlightedBlock;
-
-            console.log("Transaction:", block.node1, block.node2, "Amount:", block.transactions)
+            this.clickedBlock = this.highlightedBlock;
         }
     }
 
     onMouseUp(event) {
         this.isMouseHold = false;
         this.transactionsGrid.canDrag = true;
+        if(this.clickedBlock && this.transactionsGrid.canHover) {
+            if(this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y) {
+                console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
+            }
+        }
     }
 
     update() {

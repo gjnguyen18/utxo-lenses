@@ -1,7 +1,8 @@
 import * as T from 'three';
 
 const BACKGROUND_COLOR = 0x041a29
-const CAMERA_OFFSET = 4;
+const CAMERA_OFFSET = 3;
+const CAMERA_HEIGHT = 10;
 const LIGHT_HEIGHT = 8;
 const LIGHT_DIST = 5;
 const LIGHT_STRENGTH = 70;
@@ -13,7 +14,7 @@ export function sceneInit() {
 	const renderer = new T.WebGLRenderer();
     const lightGroup = new T.Group();
 
-	camera.position.set(0, 7, CAMERA_OFFSET);
+	camera.position.set(0, CAMERA_HEIGHT, CAMERA_OFFSET);
 	camera.lookAt(0, 0, 0);
 
     scene.background = new T.Color(BACKGROUND_COLOR);

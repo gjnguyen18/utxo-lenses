@@ -4,8 +4,7 @@ import { sceneInit } from './sceneInit.js';
 import { TransactionsGrid } from './transactionBlock.js';
 import { SceneControl } from './control.js';
 import { initUI } from './UIInit.js';
-
-const NUM_DUMMY_NODES = 30;
+import { getData } from './endpoint.js';
 
 export function startScene() {
 
@@ -23,20 +22,16 @@ export function startScene() {
 	// UI init
 	initUI(transactionsGrid);
 
-	// random dummy data
-	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
-		transactionsGrid.addNode(i);
-	}
+	// get data
+	let data = getData(0, 0);
 
-	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
-		for(let k = 0; k < NUM_DUMMY_NODES; k++) {
-			transactionsGrid.addTransaction(i, k, Math.random());
-		}
-	}
+	// load data
+	transactionsGrid.loadData(data);
 
 	// display grid
 	transactionsGrid.setBlocks();
 
+	// mouse events
 	function onMouseMove(event) {
 		control.onMouseMove(event);
 	}

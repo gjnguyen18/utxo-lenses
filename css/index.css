@@ -49,8 +49,9 @@ input[type='file'] {
 }
 
 button {
-    border-radius: 0px;
-    border-width: 0px;
+    border-radius: 2px;
+    border-width: 2px;
+    background-color:rgb(255, 255, 255)
 }
 
 button:hover {
@@ -82,42 +83,49 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+#Update-div {
+    padding: 10px;
+}
+
+#Update-div > * {
+    width: calc(20%);
+    height: 20px;
+}
+
+/* https://codingartistweb.com/2021/06/double-range-slider-html-css-javascript/*/
+
 input[type="range"]{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    width: 100%;
+    width: 95%;
+    left: 2.5%;
     outline: none;
     position: absolute;
     margin: auto;
-    top: 0;
+    top: 30%;
     bottom: 0;
     background-color: transparent;
     pointer-events: none;
 }
 
-.slider-track{
-    width: 100%;
+#sliderBar-div {
+    width: 95%;
+    left: 2.5%;
     height: 5px;
     position: absolute;
     margin: auto;
-    top: 0;
+    top: 30%;
     bottom: 0;
     border-radius: 5px;
+    background-color: #ffffff;
 }
 
 input[type="range"]::-webkit-slider-runnable-track{
     -webkit-appearance: none;
     height: 5px;
 }
-input[type="range"]::-moz-range-track{
-    -moz-appearance: none;
-    height: 5px;
-}
-input[type="range"]::-ms-track{
-    appearance: none;
-    height: 5px;
-}
+
 input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance: none;
     height: 1.7em;
@@ -128,24 +136,7 @@ input[type="range"]::-webkit-slider-thumb{
     pointer-events: auto;
     border-radius: 50%;
 }
-input[type="range"]::-moz-range-thumb{
-    -webkit-appearance: none;
-    height: 1.7em;
-    width: 1.7em;
-    cursor: pointer;
-    border-radius: 50%;
-    background-color: #3264fe;
-    pointer-events: auto;
-}
-input[type="range"]::-ms-thumb{
-    appearance: none;
-    height: 1.7em;
-    width: 1.7em;
-    cursor: pointer;
-    border-radius: 50%;
-    background-color: #3264fe;
-    pointer-events: auto;
-}
+
 input[type="range"]:active::-webkit-slider-thumb{
     background-color: #ffffff;
     border: 3px solid #3264fe;
