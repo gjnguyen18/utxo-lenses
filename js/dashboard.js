@@ -3,12 +3,13 @@ import { getColorFromRamp } from './helpers.js';
 import { sceneInit } from './sceneInit.js';
 import { TransactionsGrid } from './transactionBlock.js';
 import { SceneControl } from './control.js';
+import { initUI } from './UIInit.js';
 
 const NUM_DUMMY_NODES = 30;
 
 export function startScene() {
 
-	// scene setup
+	// scene init
 	let sceneData = sceneInit();
 	const scene = sceneData.scene;
 	const camera = sceneData.camera;
@@ -18,6 +19,9 @@ export function startScene() {
 	// transaction data init
 	const transactionsGrid = new TransactionsGrid(scene);
 	const control = new SceneControl(scene, camera, transactionsGrid);
+
+	// UI init
+	initUI(transactionsGrid);
 
 	// random dummy data
 	for(let i = 0; i < NUM_DUMMY_NODES; i++) {

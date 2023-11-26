@@ -14,6 +14,10 @@ export class TransactionsGrid {
         this.transactions = new Map();
         this.scene = scene;
         this.blocks = [];
+        this.canDrag = true;
+        this.displayFrom;
+        this.displayTo;
+        this.displayAmount;
     }
 
     addNode(id) {

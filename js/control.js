@@ -2,7 +2,7 @@ import * as T from 'three';
 
 const CAMERA_SPEED = 10;
 
-const CAMERA_DECEL_SPEED = 0.97;
+const CAMERA_DECEL_SPEED = 0.99;
 
 export class SceneControl {
     constructor(scene, camera, transactionsGrid) {
@@ -39,16 +39,28 @@ export class SceneControl {
                 if(intersectObj == block.getCube()) {
                     block.toggleHighlight(true);
                     this.highlightedBlock = block;
-                } else {
+                } 
+                else {
                     block.toggleHighlight(false);
                 }
             })
-        } else {
-            this.highlightedBlock.toggleHighlight(false);
+        } 
+        else {
+            if(this.highlightedBlock) {
+                this.highlightedBlock.toggleHighlight(false);
+            }
             this.highlightedBlock = null;
         }
+        if(this.highlightedBlock && this.transactionsGrid.displayFrom) {
+            this.transactionsGrid.displayFrom.label.innerHTML = 
+                "From: " + this.highlightedBlock.node1
+            this.transactionsGrid.displayTo.label.innerHTML = 
+                "To: " + this.highlightedBlock.node2 
+            this.transactionsGrid.displayAmount.label.innerHTML = 
+                "Amount: " + this.highlightedBlock.transactions
+        }
 
-        if(this.isMouseHold) {
+        if(this.isMouseHold && this.transactionsGrid.canDrag) {
             let deltaX = this.mouse.x - this.lastMouse.x;
             let deltaY = this.mouse.y - this.lastMouse.y;
 
@@ -71,6 +83,7 @@ export class SceneControl {
 
     onMouseUp(event) {
         this.isMouseHold = false;
+        this.transactionsGrid.canDrag = true;
     }
 
     update() {
@@ -79,10 +92,10 @@ export class SceneControl {
             this.cameraAccel.x *= CAMERA_DECEL_SPEED;
             this.cameraAccel.y *= CAMERA_DECEL_SPEED;
 
-            if(Math.abs(this.cameraAccel.x) < 0.01) {
+            if(Math.abs(this.cameraAccel.x) < 0.005) {
                 this.cameraAccel.x = 0;
             }
-            if(Math.abs(this.cameraAccel.y) < 0.01) {
+            if(Math.abs(this.cameraAccel.y) < 0.005) {
                 this.cameraAccel.y = 0;
             }
 
