@@ -57,8 +57,6 @@ export class TransactionsGrid {
     }
 
     setBlocks() {
-        console.log(this.transactions);
-
         this.blocks = [];
         let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
         let max = 0;
@@ -94,7 +92,7 @@ export class TransactionsGrid {
         let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
         for(let i = 0; i < nodeArray.length; i++) {
             for(let k = 0; k < nodeArray.length; k++) {
-                this.scene.remove(this.blocks[i][k])
+                this.scene.remove(this.blocks[i][k].getCube())
             }
         }
         this.blocks = [];

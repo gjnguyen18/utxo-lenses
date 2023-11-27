@@ -8,12 +8,14 @@ export function getData(startTime, endTime) {
     let transactions = [];
 
     // TODO: replace dummy data with new data
-    
     const NUM_DUMMY_NODES = 30;
 
+    // get nodes
     for(let i = 0; i < NUM_DUMMY_NODES; i++) {
 		nodes.push(i);
 	}
+
+    // get transactions
 	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
 		for(let k = 0; k < NUM_DUMMY_NODES; k++) {
 			transactions.push(
@@ -24,6 +26,7 @@ export function getData(startTime, endTime) {
                 });
 		}
 	}
+
     return {
         nodes: nodes,
         transactions: transactions

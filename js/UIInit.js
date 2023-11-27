@@ -1,4 +1,5 @@
 import { Button, Checkbox, Slider, TextBox, Element } from "./pageElements"
+import { getData } from './endpoint.js';
 
 const YEARS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -49,7 +50,10 @@ export function initUI(transactionsGrid) {
     let dateRangeText = new TextBox("date range", "bottomDiv", "");
 
     let updateButton = new Button("Update", "bottomDiv", () => {
-        console.log("buttonPressed")
+        transactionsGrid.clearBlocks();
+        let data = getData(Number(slider1.slider.value), Number(slider2.slider.value));
+        transactionsGrid.loadData(data);
+        transactionsGrid.setBlocks();
     })
 
     let sliderDiv = new Element("sliderBar", "bottomDiv");
