@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { Container, TextBox } from './pageElements';
 
 const CAMERA_SPEED = 10;
 
@@ -16,6 +17,7 @@ export class SceneControl {
         this.cameraAccel = new T.Vector2();
         this.highlightedBlock = null;
         this.clickedBlock = null;
+        this.selectedDiv;
     }
 
     mouseUpdate() {
@@ -73,6 +75,8 @@ export class SceneControl {
 
             this.cameraAccel.x = deltaX;
             this.cameraAccel.y = deltaY;
+
+            this.bindCamera();
         } 
     }
 
@@ -88,8 +92,22 @@ export class SceneControl {
         this.isMouseHold = false;
         this.transactionsGrid.canDrag = true;
         if(this.clickedBlock && this.transactionsGrid.canHover) {
-            if(this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y) {
+            if(this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y && this.highlightedBlock) {
                 console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
+
+                if(this.selectedDiv) {
+                    this.selectedDiv.removeDiv();
+                }
+
+                // add to side bar
+                this.selectedDiv = new Container("transaction select", "sideDiv", true);
+                let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1));
+                let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
+                this.selectedDiv.addBlock(displayFrom, displayTo)
+                this.clickedBlock.transactions.forEach(t => {
+                    let text = new TextBox("transaction", "sideDiv", "Amount: " + String(t));
+                    this.selectedDiv.addBlock(text)
+                })
             }
         }
     }
@@ -109,6 +127,23 @@ export class SceneControl {
 
             this.camera.position.x += -this.cameraAccel.x;
             this.camera.position.z += this.cameraAccel.y;
+
+            this.bindCamera();
+        }
+    }
+
+    bindCamera() {
+        if(this.camera.position.x > this.transactionsGrid.maxRange) {
+            this.camera.position.x = this.transactionsGrid.maxRange
+        }
+        if(this.camera.position.x < -this.transactionsGrid.maxRange) {
+            this.camera.position.x = -this.transactionsGrid.maxRange
+        }
+        if(this.camera.position.z > this.transactionsGrid.maxRange) {
+            this.camera.position.z = this.transactionsGrid.maxRange
+        }
+        if(this.camera.position.z < -this.transactionsGrid.maxRange) {
+            this.camera.position.z = -this.transactionsGrid.maxRange
         }
     }
 }

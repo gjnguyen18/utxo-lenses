@@ -21,7 +21,7 @@ export function getData(startTime, endTime) {
 
         let from = Math.floor(Math.random() * NUM_DUMMY_NODES);
         let to = Math.floor(Math.random() * NUM_DUMMY_NODES);
-        let amount = from != to ? Math.random() * 5 : 0
+        let amount = from != to ? Math.random() * 5 + 1 : 0
 
         transactions.push(
             {

@@ -35,6 +35,12 @@ export function sceneInit() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	document.body.appendChild(renderer.domElement);
 
+    addEventListener("resize", (event) => {
+		renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+	});
+
     return {
         scene: scene,
         camera: camera,

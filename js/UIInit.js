@@ -10,13 +10,9 @@ function getDate(value) {
 
 export function initUI(transactionsGrid) {
     /* UI */
-    // let leftDiv = document.createElement('div');
-    // leftDiv.id = "leftDiv";
-    // document.body.appendChild(leftDiv);
-
-    // let rightDiv = document.createElement('div');
-    // rightDiv.id = "rightDiv";
-    // document.body.appendChild(rightDiv);
+    let sideDiv = document.createElement('div');
+    sideDiv.id = "sideDiv";
+    document.body.appendChild(sideDiv);
 
     let topDiv = document.createElement('div');
     topDiv.id = "topDiv";

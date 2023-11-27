@@ -18,6 +18,7 @@ export class TransactionsGrid {
         this.displayFrom;
         this.displayTo;
         this.displayAmount;
+        this.maxRange = 0;
     }
 
     addNode(id) {
@@ -73,6 +74,7 @@ export class TransactionsGrid {
     setBlocks() {
         this.blocks = [];
         let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
+        this.maxRange = (nodeArray.length / 2) * (BLOCK_WIDTH + SPACING)
         let max = 0;
 
         for(let i = 0; i < nodeArray.length; i++) {

@@ -42,6 +42,8 @@ export function startScene() {
 		control.onMouseUp(event);
 	}
 
+
+
 	window.addEventListener('mousemove', onMouseMove, false);
 	document.body.addEventListener('mousedown', onMouseDown, true);
 	document.body.addEventListener('mouseup', onMouseUp, true);
