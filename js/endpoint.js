@@ -9,6 +9,7 @@ export function getData(startTime, endTime) {
 
     // TODO: replace dummy data with new data
     const NUM_DUMMY_NODES = 30;
+    const NUM_DUMMY_TRANSACTIONS = 2000;
 
     // get nodes
     for(let i = 0; i < NUM_DUMMY_NODES; i++) {
@@ -16,16 +17,19 @@ export function getData(startTime, endTime) {
 	}
 
     // get transactions
-	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
-		for(let k = 0; k < NUM_DUMMY_NODES; k++) {
-			transactions.push(
-                {
-                    from: i,
-                    to: k,
-                    amount: Math.random() * 5
-                });
-		}
-	}
+    for(let i = 0; i < NUM_DUMMY_TRANSACTIONS; i++) {
+
+        let from = Math.floor(Math.random() * NUM_DUMMY_NODES);
+        let to = Math.floor(Math.random() * NUM_DUMMY_NODES);
+        let amount = from != to ? Math.random() * 5 : 0
+
+        transactions.push(
+            {
+                from: from,
+                to: to,
+                amount: amount
+            });
+    }
 
     return {
         nodes: nodes,
