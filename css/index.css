@@ -87,8 +87,8 @@ button:hover {
     position: fixed;
     text-align: center;
     bottom: 2%;
-    left: 10%;
-    width: calc(80% - 20px);
+    left: 2%;
+    width: calc(96% - 20px);
     height: 100px;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);

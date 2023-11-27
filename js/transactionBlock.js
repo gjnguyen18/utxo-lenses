@@ -2,6 +2,8 @@ import * as T from 'three';
 import { getColorFromRamp } from './helpers';
 
 const COLORS = [new T.Color(0, 1, 0), new T.Color(0.5, 0.5, 0)];
+const SELECT_COLOR = new T.Color(0.8, 0.4, 1);
+const SELECT_COLOR_HL = new T.Color(1, 0.7, 1);
 const BLOCK_WIDTH = 1.0;
 const SPACING = 0.3;
 const MIN_HEIGHT = 0.5;
@@ -127,6 +129,7 @@ export class TransactionBlock {
         this.node2 = node2;
         this.color = getColorFromRamp(COLORS, 0);
         this.hlColor = new T.Color("white");
+        this.selected = false;
 
         let geometry = new T.BoxGeometry(BLOCK_WIDTH, (this.value / this.globalMax) * MAX_HEIGHT + MIN_HEIGHT, BLOCK_WIDTH);
         let material = new T.MeshPhongMaterial({ 
@@ -150,11 +153,28 @@ export class TransactionBlock {
 
     toggleHighlight(highlight) {
         if(highlight) {
-            this.cube.material.color = this.hlColor;
+            if(this.select) {
+                this.cube.material.color = SELECT_COLOR_HL
+            } else {
+                this.cube.material.color = this.hlColor;
+            }
         } else {
+            if(this.select) {
+                this.cube.material.color = SELECT_COLOR
+            } else {
+                this.cube.material.color = this.color;
+            }
+        }
+    }
+
+    toggleSelect(select) {
+        this.select = select;
+        if(this.select) {
+            this.cube.material.color = SELECT_COLOR_HL;
+        }else {
             this.cube.material.color = this.color;
         }
-    }   
+    }
 
     getTransactions() {
         return this.transactions;

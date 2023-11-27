@@ -2,7 +2,6 @@ import * as T from 'three';
 import { Container, TextBox } from './pageElements';
 
 const CAMERA_SPEED = 10;
-
 const CAMERA_DECEL_SPEED = 0.99;
 
 export class SceneControl {
@@ -17,6 +16,7 @@ export class SceneControl {
         this.cameraAccel = new T.Vector2();
         this.highlightedBlock = null;
         this.clickedBlock = null;
+        this.selectedBlock = null;
         this.selectedDiv;
     }
 
@@ -63,7 +63,7 @@ export class SceneControl {
             this.transactionsGrid.displayTo.label.innerHTML = 
                 "To: " + this.highlightedBlock.node2 
             this.transactionsGrid.displayAmount.label.innerHTML = 
-                "Amount: " + this.highlightedBlock.getTransactionsValue();
+                "Total: " + this.highlightedBlock.getTransactionsValue();
         }
 
         if(this.isMouseHold && this.transactionsGrid.canDrag) {
@@ -91,24 +91,40 @@ export class SceneControl {
     onMouseUp(event) {
         this.isMouseHold = false;
         this.transactionsGrid.canDrag = true;
-        if(this.clickedBlock && this.transactionsGrid.canHover) {
-            if(this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y && this.highlightedBlock) {
-                console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
+        if(this.clickedBlock && this.transactionsGrid.canHover && 
+            this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y && this.highlightedBlock) {
 
-                if(this.selectedDiv) {
-                    this.selectedDiv.removeDiv();
-                }
+            console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
 
-                // add to side bar
-                this.selectedDiv = new Container("transaction select", "sideDiv", true);
-                let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1));
-                let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
-                this.selectedDiv.addBlock(displayFrom, displayTo)
-                this.clickedBlock.transactions.forEach(t => {
+            if(this.selectedBlock) {
+                this.selectedBlock.toggleSelect(false);
+            }
+
+            this.selectedBlock = this.clickedBlock;
+
+            if(this.selectedDiv) {
+                this.selectedDiv.removeDiv();
+            }
+
+            // add to side bar
+            this.selectedDiv = new Container("transaction select", "sideDiv", true);
+            let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1));
+            let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
+            this.selectedDiv.addBlock(displayFrom, displayTo)
+            let count = 0;
+            this.clickedBlock.transactions.forEach(t => {
+                if(t > 0) {
                     let text = new TextBox("transaction", "sideDiv", "Amount: " + String(t));
                     this.selectedDiv.addBlock(text)
-                })
+                    count += 1;
+                }
+            })
+            if(count == 0) {
+                let text = new TextBox("transaction", "sideDiv", "Amount: NA");
+                this.selectedDiv.addBlock(text)
             }
+
+            this.selectedBlock.toggleSelect(true);
         }
     }
 

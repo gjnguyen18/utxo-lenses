@@ -38,7 +38,7 @@ export function initUI(transactionsGrid) {
     transactionsGrid.displayFrom = text1;
     let text2 = new TextBox("to display", "topDiv", "To: NA");
     transactionsGrid.displayTo = text2;
-    let text3 = new TextBox("amount display", "topDiv", "Amount: NA");
+    let text3 = new TextBox("amount display", "topDiv", "Total: NA");
     transactionsGrid.displayAmount = text3;
 
     let numMonths = Number(YEARS.length) * Number(MONTHS.length) - 1;
