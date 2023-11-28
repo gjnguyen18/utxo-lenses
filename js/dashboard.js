@@ -34,6 +34,9 @@ export function startScene() {
 		}
 	}
 
+	// Nodes are users and addtransactions in the format of from, to and amount 
+	// Mark line over blocks
+
 	// display grid
 	transactionsGrid.setBlocks();
 
