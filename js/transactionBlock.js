@@ -1,12 +1,13 @@
 import * as T from 'three';
-import { Node } from './node';
 import { getColorFromRamp } from './helpers';
 
 const COLORS = [new T.Color(0, 1, 0), new T.Color(0.5, 0.5, 0)];
-const HEIGHT_SCALE = 1.0;
+const SELECT_COLOR = new T.Color(0.8, 0.4, 1);
+const SELECT_COLOR_HL = new T.Color(1, 0.7, 1);
 const BLOCK_WIDTH = 1.0;
 const SPACING = 0.3;
 const MIN_HEIGHT = 0.5;
+const MAX_HEIGHT = 2;
 
 export class TransactionsGrid {
     constructor(scene) {
@@ -15,9 +16,11 @@ export class TransactionsGrid {
         this.scene = scene;
         this.blocks = [];
         this.canDrag = true;
+        this.canHover = true;
         this.displayFrom;
         this.displayTo;
         this.displayAmount;
+        this.maxRange = 0;
     }
 
     addNode(id) {
@@ -29,32 +32,57 @@ export class TransactionsGrid {
         let node1 = this.nodes.get(id1);
         let node2 = this.nodes.get(id2);
 
-        node1.setTransaction(node2, amount);
-        node2.setTransaction(node1, amount);
+        node1.addTransaction(node2, amount);
+        node2.addTransaction(node1, amount);
 
-        this.transactions.set([id1, id2].toString(), amount);
+        let key = [id1, id2].toString();
+
+        if(!this.transactions.get(key)) {
+            this.transactions.set(key, [])
+        }
+        this.transactions.get(key).push(amount);
     }
 
-    getTransaction(id1, id2) {
+    getTransactions(id1, id2) {
         let transaction = this.transactions.get([id1, id2].toString());
         if(transaction) {
             return transaction;
+        } else {
+            return [];
+        }
+    }
+
+    getTransactionsValue(id1, id2) {
+        let transaction = this.transactions.get([id1, id2].toString());
+        if(transaction) {
+            let sum = 0;
+            transaction.forEach((i) => sum += i);
+            return sum;
         } else {
             return 0;
         }
     }
 
-    setBlocks() {
-        console.log(this.transactions);
+    loadData(data) {
+        data.nodes.forEach((i) => this.addNode(i));
+        data.transactions.forEach((t) => {
+            this.addTransaction(
+                t.from, 
+                t.to, 
+                t.amount);
+        })
+    }
 
+    setBlocks() {
         this.blocks = [];
         let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
+        this.maxRange = (nodeArray.length / 2) * (BLOCK_WIDTH + SPACING)
         let max = 0;
 
         for(let i = 0; i < nodeArray.length; i++) {
             this.blocks.push([]);
             for(let k = 0; k < nodeArray.length; k++) {
-                let amount = this.getTransaction(nodeArray[i].id, nodeArray[k].id);
+                let amount = this.getTransactionsValue(nodeArray[i].id, nodeArray[k].id);
                 if(amount > max) {
                     max = amount;
                 }
@@ -63,8 +91,9 @@ export class TransactionsGrid {
 
         for(let i = 0; i < nodeArray.length; i++) {
             for(let k = 0; k < nodeArray.length; k++) {
-                let amount = this.getTransaction(nodeArray[i].id, nodeArray[k].id);
-                this.blocks[i][k] = new TransactionBlock(nodeArray[i].id, nodeArray[k].id, amount);
+                let transactions = this.getTransactions(nodeArray[i].id, nodeArray[k].id);
+                let amount = this.getTransactionsValue(nodeArray[i].id, nodeArray[k].id);
+                this.blocks[i][k] = new TransactionBlock(nodeArray[i].id, nodeArray[k].id, transactions, amount, max);
                 this.blocks[i][k].setPosition(
                     (i - (nodeArray.length / 2)) * (BLOCK_WIDTH + SPACING), 
                     (k - (nodeArray.length / 2)) * (BLOCK_WIDTH + SPACING));
@@ -77,22 +106,37 @@ export class TransactionsGrid {
     getBlocks() {
         return this.blocks;
     }
+
+    clearData() {
+        let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
+        for(let i = 0; i < nodeArray.length; i++) {
+            for(let k = 0; k < nodeArray.length; k++) {
+                this.scene.remove(this.blocks[i][k].getCube())
+            }
+        }
+        this.blocks = [];
+        this.nodes = new Map();
+        this.transactions = new Map();
+    }
 }
 
 export class TransactionBlock {
-    constructor(node1, node2, transactions) {
+    constructor(node1, node2, transactions, value, max) {
         this.transactions = transactions;
+        this.value = value;
+        this.globalMax = max;
         this.node1 = node1;
         this.node2 = node2;
         this.color = getColorFromRamp(COLORS, 0);
         this.hlColor = new T.Color("white");
+        this.selected = false;
 
-        let geometry = new T.BoxGeometry(BLOCK_WIDTH, this.transactions * HEIGHT_SCALE + MIN_HEIGHT, BLOCK_WIDTH);
+        let geometry = new T.BoxGeometry(BLOCK_WIDTH, (this.value / this.globalMax) * MAX_HEIGHT + MIN_HEIGHT, BLOCK_WIDTH);
         let material = new T.MeshPhongMaterial({ 
             color: this.color
         });
         this.cube = new T.Mesh(geometry, material);
-        this.cube.position.y = (this.transactions * HEIGHT_SCALE / 2)
+        this.cube.position.y = (((this.value / this.globalMax) * MAX_HEIGHT + MIN_HEIGHT) / 2)
     }
 
     recolor(scale) {
@@ -109,13 +153,52 @@ export class TransactionBlock {
 
     toggleHighlight(highlight) {
         if(highlight) {
-            this.cube.material.color = this.hlColor;
+            if(this.select) {
+                this.cube.material.color = SELECT_COLOR_HL
+            } else {
+                this.cube.material.color = this.hlColor;
+            }
         } else {
+            if(this.select) {
+                this.cube.material.color = SELECT_COLOR
+            } else {
+                this.cube.material.color = this.color;
+            }
+        }
+    }
+
+    toggleSelect(select) {
+        this.select = select;
+        if(this.select) {
+            this.cube.material.color = SELECT_COLOR_HL;
+        }else {
             this.cube.material.color = this.color;
         }
-    }   
+    }
+
+    getTransactions() {
+        return this.transactions;
+    }
+
+    getTransactionsValue() {
+        return this.value;
+    }
 
     getCube() {
         return this.cube;
+    }
+}
+
+export class Node {
+    constructor(id) {
+        this.id = id;
+        this.transactions = new Map();
+    }
+
+    addTransaction(otherNode, amount) {
+        if(!this.transactions.get(otherNode.id)) {
+            this.transactions.set(otherNode.id, [])
+        }
+        this.transactions.get(otherNode.id).push(amount);
     }
 }

@@ -147,10 +147,9 @@ export class Slider extends Element {
         this.slider.setAttribute("value", value);
         this.slider.id = name.replaceAll(" ","-") + "-slider";
 
-        this.elements.push(this.label);
-        this.elements.push(this.labelBreak);
+        // this.elements.push(this.label);
+        // this.elements.push(this.labelBreak);
         this.elements.push(this.slider);
-        // this.elements.push(this.endBreak);
 
         this.addElements();
     }
@@ -287,57 +286,5 @@ export class Button extends Element {
         this.elements.push(this.button);
         
         this.addElements();
-    }
-}
-
-export class Image extends Element {
-    constructor(name, domParent, src) {
-        super(name, domParent);
-        this.div.classList.add("imageDiv");
-
-        this.image = document.createElement("img");
-        this.image.innerHTML = name;
-        this.image.src = src;
-        this.image.id = name.replaceAll(" ","-") + "-image";
-
-        this.elements.push(this.image);
-        
-        this.addElements();
-    }
-}
-
-export class FileUploader extends Element {
-    constructor(name, domParent, acceptTypes, includeDir = false) {
-        super(name, domParent);
-        this.div.classList.add("fileUploadDiv");
-
-        this.fileUploader = document.createElement("input");
-        this.fileUploader.setAttribute("type", "file");
-        this.fileUploader.id = name.replaceAll(" ","-") + "-uploader"
-        this.fileUploader.onclick = () => {
-            this.fileUploader.value = null;
-        }
-
-        this.acceptTypes = acceptTypes;
-        this.includeDir = includeDir;
-    
-        if(acceptTypes.length > 0) {
-            this.fileUploader.setAttribute("accept", acceptTypes.join(', '));
-        }
-    
-        if (includeDir) {
-            this.fileUploader.setAttribute("webkitdirectory", "");
-        }
-
-        this.elements.push(this.label);
-        this.elements.push(this.labelBreak);
-        this.elements.push(this.fileUploader);
-        // this.elements.push(this.endBreak);
-
-        this.addElements();
-    }
-
-    getFiles() {
-        return this.fileUploader.files;
     }
 }
