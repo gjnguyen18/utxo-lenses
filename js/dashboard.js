@@ -4,7 +4,8 @@ import { sceneInit } from './sceneInit.js';
 import { TransactionsGrid } from './transactionBlock.js';
 import { SceneControl } from './control.js';
 import { initUI } from './UIInit.js';
-import { getData } from './endpoint.js';
+
+const NUM_DUMMY_NODES = 30;
 
 export function startScene() {
 
@@ -22,11 +23,16 @@ export function startScene() {
 	// UI init
 	initUI(transactionsGrid);
 
-	// get data
-	let data = getData(0, 0);
+	// random dummy data
+	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
+		transactionsGrid.addNode(i);
+	}
 
-	// load data
-	transactionsGrid.loadData(data);
+	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
+		for(let k = 0; k < NUM_DUMMY_NODES; k++) {
+			transactionsGrid.addTransaction(i, k, Math.random());
+		}
+	}
 
 	// Nodes are users and addtransactions in the format of from, to and amount 
 	// Mark line over blocks
@@ -34,7 +40,6 @@ export function startScene() {
 	// display grid
 	transactionsGrid.setBlocks();
 
-	// mouse events
 	function onMouseMove(event) {
 		control.onMouseMove(event);
 	}
@@ -44,8 +49,6 @@ export function startScene() {
 	function onMouseUp(event) {
 		control.onMouseUp(event);
 	}
-
-
 
 	window.addEventListener('mousemove', onMouseMove, false);
 	document.body.addEventListener('mousedown', onMouseDown, true);

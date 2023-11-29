@@ -1,7 +1,7 @@
 import * as T from 'three';
-import { Container, TextBox } from './pageElements';
 
 const CAMERA_SPEED = 10;
+
 const CAMERA_DECEL_SPEED = 0.99;
 
 export class SceneControl {
@@ -15,23 +15,17 @@ export class SceneControl {
         this.isMouseHold = false;
         this.cameraAccel = new T.Vector2();
         this.highlightedBlock = null;
-        this.clickedBlock = null;
-        this.selectedBlock = null;
-        this.selectedDiv;
     }
 
-    mouseUpdate() {
+    onMouseMove(event) {
         // mouse update
         this.lastMouse.x = this.mouse.x;
         this.lastMouse.y = this.mouse.y;
 
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    }
+		this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-    onMouseMove(event) {
-        // mouse update
-        this.mouseUpdate()
+        // console.log(this.mouse.x, this.mouse.y)
 
         // object highlight
         let blocks = this.transactionsGrid.getBlocks();
@@ -39,7 +33,7 @@ export class SceneControl {
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
         let intersect = this.raycaster.intersectObjects(cubeMeshes, false);
-        if(intersect.length > 0 && this.transactionsGrid.canHover) {
+        if(intersect.length > 0) {
             let intersectObj = intersect[0].object;
             blocks.flat().forEach(block => {
                 if(intersectObj == block.getCube()) {
@@ -63,7 +57,7 @@ export class SceneControl {
             this.transactionsGrid.displayTo.label.innerHTML = 
                 "To: " + this.highlightedBlock.node2 
             this.transactionsGrid.displayAmount.label.innerHTML = 
-                "Total: " + this.highlightedBlock.getTransactionsValue();
+                "Amount: " + this.highlightedBlock.transactions
         }
 
         if(this.isMouseHold && this.transactionsGrid.canDrag) {
@@ -75,57 +69,21 @@ export class SceneControl {
 
             this.cameraAccel.x = deltaX;
             this.cameraAccel.y = deltaY;
-
-            this.bindCamera();
         } 
     }
 
     onMouseDown(event) {
-        this.mouseUpdate()
         this.isMouseHold = true;
         if(this.highlightedBlock) {
-            this.clickedBlock = this.highlightedBlock;
+            let block = this.highlightedBlock;
+
+            console.log("Transaction:", block.node1, block.node2, "Amount:", block.transactions)
         }
     }
 
     onMouseUp(event) {
         this.isMouseHold = false;
         this.transactionsGrid.canDrag = true;
-        if(this.clickedBlock && this.transactionsGrid.canHover && 
-            this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y && this.highlightedBlock) {
-
-            console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
-
-            if(this.selectedBlock) {
-                this.selectedBlock.toggleSelect(false);
-            }
-
-            this.selectedBlock = this.clickedBlock;
-
-            if(this.selectedDiv) {
-                this.selectedDiv.removeDiv();
-            }
-
-            // add to side bar
-            this.selectedDiv = new Container("transaction select", "sideDiv", true);
-            let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1));
-            let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
-            this.selectedDiv.addBlock(displayFrom, displayTo)
-            let count = 0;
-            this.clickedBlock.transactions.forEach(t => {
-                if(t > 0) {
-                    let text = new TextBox("transaction", "sideDiv", "Amount: " + String(t));
-                    this.selectedDiv.addBlock(text)
-                    count += 1;
-                }
-            })
-            if(count == 0) {
-                let text = new TextBox("transaction", "sideDiv", "Amount: NA");
-                this.selectedDiv.addBlock(text)
-            }
-
-            this.selectedBlock.toggleSelect(true);
-        }
     }
 
     update() {
@@ -143,23 +101,6 @@ export class SceneControl {
 
             this.camera.position.x += -this.cameraAccel.x;
             this.camera.position.z += this.cameraAccel.y;
-
-            this.bindCamera();
-        }
-    }
-
-    bindCamera() {
-        if(this.camera.position.x > this.transactionsGrid.maxRange) {
-            this.camera.position.x = this.transactionsGrid.maxRange
-        }
-        if(this.camera.position.x < -this.transactionsGrid.maxRange) {
-            this.camera.position.x = -this.transactionsGrid.maxRange
-        }
-        if(this.camera.position.z > this.transactionsGrid.maxRange) {
-            this.camera.position.z = this.transactionsGrid.maxRange
-        }
-        if(this.camera.position.z < -this.transactionsGrid.maxRange) {
-            this.camera.position.z = -this.transactionsGrid.maxRange
         }
     }
 }
