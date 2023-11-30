@@ -66,10 +66,12 @@ export class TransactionsGrid {
     loadData(data) {
         data.nodes.forEach((i) => this.addNode(i));
         data.transactions.forEach((t) => {
-            this.addTransaction(
-                t.from, 
-                t.to, 
-                t.amount);
+            if(this.nodes.get(t.from) && this.nodes.get(t.to)) {
+                this.addTransaction(
+                    t.from, 
+                    t.to, 
+                    t.amount);
+            }
         })
     }
 

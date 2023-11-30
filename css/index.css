@@ -62,24 +62,24 @@ button:hover {
 
 #topDiv {
     color: white;
-    width: calc(300px) !important;
-    height: 50px;
+    width: calc(500px) !important;
+    height: 60px;
     position: fixed;
     top: calc(2%);
     left: 2%;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 #sideDiv {
     color: white;
-    width: calc(300px) !important;
-    height: calc(96% - 230px);
+    width: calc(500px) !important;
+    height: calc(96% - 240px);
     position: fixed;
-    top: calc(2% + 80px);
+    top: calc(2% + 90px);
     left: 2%;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 #bottomDiv {
@@ -91,7 +91,7 @@ button:hover {
     width: calc(96% - 20px);
     height: 100px;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 #Update-div {

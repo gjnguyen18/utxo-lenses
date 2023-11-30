@@ -45,12 +45,12 @@ export function initUI(transactionsGrid) {
 
     let dateRangeText = new TextBox("date range", "bottomDiv", "");
 
-    let updateButton = new Button("Update", "bottomDiv", () => {
-        transactionsGrid.clearData();
-        let data = getData(Number(slider1.slider.value), Number(slider2.slider.value));
-        transactionsGrid.loadData(data);
-        transactionsGrid.setBlocks();
-    })
+    // let updateButton = new Button("Update", "bottomDiv", () => {
+    //     transactionsGrid.clearData();
+    //     let data = getData(Number(slider1.slider.value), Number(slider2.slider.value));
+    //     transactionsGrid.loadData(data);
+    //     transactionsGrid.setBlocks();
+    // })
 
     let sliderDiv = new Element("sliderBar", "bottomDiv");
 	

@@ -23,13 +23,15 @@ export function startScene() {
 	initUI(transactionsGrid);
 
 	// get data
-	let data = getData(0, 0);
+	// let data = getData(0, 0);
+	// console.log(data)
+	getData((data) => {
+		// load data
+		transactionsGrid.loadData(data);
 
-	// load data
-	transactionsGrid.loadData(data);
-
-	// display grid
-	transactionsGrid.setBlocks();
+		// display grid
+		transactionsGrid.setBlocks();
+	})
 
 	// mouse events
 	function onMouseMove(event) {
