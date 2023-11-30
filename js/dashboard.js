@@ -23,6 +23,40 @@ export function startScene() {
 	// UI init
 	initUI(transactionsGrid);
 
+
+async function fetchDataFromAPI() {
+    try {
+        const response = await axios.get('https://raw.githubusercontent.com/gjnguyen18/utxo-lenses/setup-plus-testData/testData.json');
+        return response.data; // Assuming the API response is in the expected format
+    } catch (error) {
+        console.error('Axios error:', error);
+        throw error; // Re-throw the error for the calling code to handle if needed
+    }
+}
+
+async function fetchDataAndProcess() {
+    try {
+        const apiData = await fetchDataFromAPI();
+
+        // Process the API data as needed
+        const nodes = apiData.data.users;
+        const transactions = apiData.data.transactions;
+
+        // Display or use the processed data
+        console.log('Nodes:', nodes);
+        console.log('Transactions:', transactions);
+    } catch (error) {
+        // Handle errors if needed
+        console.error('Error:', error);
+    }
+}
+
+// Call the function when needed
+fetchDataAndProcess();
+
+
+
+
 	// random dummy data
 	for(let i = 0; i < NUM_DUMMY_NODES; i++) {
 		transactionsGrid.addNode(i);
