@@ -10,9 +10,9 @@
     add timestamps
 */
 
-async function fetchDataFromAPI() {
+async function fetchDataFromAPI(file) {
     try {
-        const response = await axios.get('https://raw.githubusercontent.com/boluwarinayinmode/Utxo-JS/main/database/transformed_data2.json?token=GHSAT0AAAAAACIJJFQPRDVNV3JX7BLQ5NCSZLRJIXA');
+        const response = await axios.get(file);
         return response.data; // Assuming the API response is in the expected format
     } catch (error) {
         console.error('Axios error:', error);
@@ -20,9 +20,9 @@ async function fetchDataFromAPI() {
     }
 }
 
-export async function getData(afterFunction = (data) => { }) {
+export async function getData(file, afterFunction = (data) => { }) {
     try {
-        const apiData = await fetchDataFromAPI();
+        const apiData = await fetchDataFromAPI(file);
 
         // Process the API data as needed
         const nodes = apiData.data.users;

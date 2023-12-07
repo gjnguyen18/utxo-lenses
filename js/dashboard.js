@@ -22,13 +22,19 @@ export function startScene() {
 	// UI init
 	initUI(transactionsGrid);
 
-	// get data
-	// let data = getData(0, 0);
-	// console.log(data)
-	getData((data) => {
+	// default file
+	let file = "https://raw.githubusercontent.com/gjnguyen18/utxo-lenses/master/transformed_data2.json"
+
+	// if query contains link, use that instead
+	let urlSearchParams = new URLSearchParams(window.location.search);
+	let params = Object.fromEntries(urlSearchParams.entries());
+	let link = params.link;
+	if (link) {
+		file = link;
+	} 
+	getData(file, (data) => {
 		// load data
 		transactionsGrid.loadData(data);
-
 		// display grid
 		transactionsGrid.setBlocks();
 	})
