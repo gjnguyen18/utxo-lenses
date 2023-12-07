@@ -5,6 +5,7 @@ import { TransactionsGrid } from './transactionBlock.js';
 import { SceneControl } from './control.js';
 import { initUI } from './UIInit.js';
 import { getData } from './endpoint.js';
+import { Button } from './pageElements.js';
 
 export function startScene() {
 
@@ -18,9 +19,6 @@ export function startScene() {
 	// transaction data init
 	const transactionsGrid = new TransactionsGrid(scene);
 	const control = new SceneControl(scene, camera, transactionsGrid);
-
-	// UI init
-	initUI(transactionsGrid);
 
 	// default file
 	let file = "https://raw.githubusercontent.com/gjnguyen18/utxo-lenses/master/transformed_data2.json"
@@ -37,6 +35,9 @@ export function startScene() {
 		transactionsGrid.loadData(data);
 		// display grid
 		transactionsGrid.setBlocks();
+
+		// UI init
+		initUI(transactionsGrid, data);
 	})
 
 	// mouse events

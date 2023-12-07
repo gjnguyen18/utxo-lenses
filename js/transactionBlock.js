@@ -1,9 +1,9 @@
 import * as T from 'three';
 import { getColorFromRamp } from './helpers';
 
-const COLORS = [new T.Color(0, 1, 0), new T.Color(0.5, 0.5, 0)];
-const SELECT_COLOR = new T.Color(0.8, 0.4, 1);
-const SELECT_COLOR_HL = new T.Color(1, 0.7, 1);
+const COLORS = [new T.Color(0, 0.5, 1), new T.Color(0.5, 0.5, 0), new T.Color(1, 0, 0)];
+const SELECT_COLOR = new T.Color(0.8, 0.8, 1);
+const SELECT_COLOR_HL = new T.Color(1, 1, 1);
 const BLOCK_WIDTH = 1.0;
 const SPACING = 0.3;
 const MIN_HEIGHT = 0.5;
@@ -66,10 +66,22 @@ export class TransactionsGrid {
         }
     }
 
-    loadData(data) {
-        console.log(data)
+    loadData(data, startTime = -1, endTime = -1) {
+
+        let transactions;
+
+        if(startTime >= 0 && endTime >= 0) {
+            transactions = data.transactions.filter((tr) => {
+                let date = new Date(tr.timestamp);
+                return date > startTime && date < endTime;
+            })
+            // console.log(transactions)
+        } else {
+            transactions = data.transactions;
+        }
+        // console.log(data)
         data.nodes.forEach((i) => this.addNode(i));
-        data.transactions.forEach((t) => {
+        transactions.forEach((t) => {
             if(this.nodes.get(t.from) && this.nodes.get(t.to)) {
                 this.addTransaction(
                     t.from, 
@@ -84,7 +96,7 @@ export class TransactionsGrid {
         this.blocks = [];
         let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
         this.maxRange = (nodeArray.length / 2) * (BLOCK_WIDTH + SPACING)
-        let max = 0;
+        let max = 0.001;
 
         for(let i = 0; i < nodeArray.length; i++) {
             this.blocks.push([]);

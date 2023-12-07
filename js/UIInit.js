@@ -8,7 +8,15 @@ function getDate(value) {
     return MONTHS[value%MONTHS.length] + " " + String(YEARS[Math.floor(value/MONTHS.length)])
 }
 
-export function initUI(transactionsGrid) {
+function getDateObj(value) {
+    let month = value%MONTHS.length;
+    let year = YEARS[Math.floor(value/MONTHS.length)];
+    let date = new Date(year, month);
+    // console.log(date);
+    return date;
+}
+
+export function initUI(transactionsGrid, data) {
     /* UI */
     let sideDiv = document.createElement('div');
     sideDiv.id = "sideDiv";
@@ -45,13 +53,6 @@ export function initUI(transactionsGrid) {
 
     let dateRangeText = new TextBox("date range", "bottomDiv", "");
 
-    // let updateButton = new Button("Update", "bottomDiv", () => {
-    //     transactionsGrid.clearData();
-    //     let data = getData(Number(slider1.slider.value), Number(slider2.slider.value));
-    //     transactionsGrid.loadData(data);
-    //     transactionsGrid.setBlocks();
-    // })
-
     let sliderDiv = new Element("sliderBar", "bottomDiv");
 	
     let slider1 = new Slider("Slider 1", "bottomDiv", 0, numMonths, 1, Number(numMonths) - 5);
@@ -80,6 +81,15 @@ export function initUI(transactionsGrid) {
         updateBar()
     }
 
+    // let updateButton = new Button("Update", "bottomDiv", () => {
+    //     let startTime = getDateObj(slider1.slider.value)
+    //     let endTime = getDateObj(slider2.slider.value)
+
+    //     transactionsGrid.clearData();
+    //     transactionsGrid.loadData(data, startTime, endTime)
+    //     transactionsGrid.setBlocks();
+    // })
+
     updateBar()
 
     function updateBar(){
@@ -92,5 +102,12 @@ export function initUI(transactionsGrid) {
         sliderDiv.div.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
 
         dateRangeText.label.innerHTML = getDate(slider1.slider.value) + " - " + getDate(slider2.slider.value)
+
+        let startTime = getDateObj(slider1.slider.value)
+        let endTime = getDateObj(slider2.slider.value)
+
+        transactionsGrid.clearData();
+        transactionsGrid.loadData(data, startTime, endTime)
+        transactionsGrid.setBlocks();
     }
 }

@@ -4,6 +4,9 @@ import { Container, TextBox } from './pageElements';
 const CAMERA_SPEED = 10;
 const CAMERA_DECEL_SPEED = 0.99;
 
+const YEARS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
 export class SceneControl {
     constructor(scene, camera, transactionsGrid) {
         this.scene = scene;
@@ -112,19 +115,26 @@ export class SceneControl {
             let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
             this.selectedDiv.addBlock(displayFrom, displayTo)
             let count = 0;
+            this.clickedBlock.transactions.sort(function(a, b) {
+                return new Date(b.time) - new Date(a.time);
+            });
             this.clickedBlock.transactions.forEach(t => {
                 if(t.amount > 0) {
                     let transactionContainer = new Container("tCont", "sideDiv", true);
                     let text = new TextBox("transaction amount", "sideDiv", "Amount: " + String(t.amount));
-                    let text2 = new TextBox("transaction time", "sideDiv", "Time: " + String(t.time));
+                    let date = new Date(t.time);
+                    let text2 = new TextBox("transaction time", "sideDiv", "Time: " + 
+                        String(date.getMonth()) + "-" + String(date.getDay()) + "-" + String(date.getFullYear()));
                     transactionContainer.addBlock(text,text2);
                     this.selectedDiv.addBlock(transactionContainer)
                     count += 1;
                 }
             })
             if(count == 0) {
+                let transactionContainer = new Container("tCont", "sideDiv", true);
                 let text = new TextBox("transaction", "sideDiv", "Amount: NA");
-                this.selectedDiv.addBlock(text)
+                transactionContainer.addBlock(text);
+                this.selectedDiv.addBlock(transactionContainer)
             }
 
             this.selectedBlock.toggleSelect(true);
