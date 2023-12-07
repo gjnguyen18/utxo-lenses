@@ -64,12 +64,28 @@ button:hover {
     padding: 10px;
 }
 
-#topDiv {
+#titleDiv {
     color: white;
-    width: calc(500px) !important;
+    width: calc(300px) !important;
     height: 60px;
     position: fixed;
     top: calc(2%);
+    right: 2%;
+    padding: 20px;
+    font-size: 50px;
+    font-family:Impact;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+#topDiv {
+    color: white;
+    width: calc(700px) !important;
+    height: 90px;
+    position: fixed;
+    top: calc(2%);
+    font-size: 20px;
     left: 2%;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.3);
@@ -77,13 +93,26 @@ button:hover {
 
 #sideDiv {
     color: white;
-    width: calc(500px) !important;
-    height: calc(96% - 240px);
+    width: calc(300px) !important;
+    height: calc(96% - 300px);
     position: fixed;
-    top: calc(2% + 90px);
+    overflow-x:hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+    top: calc(2% + 140px);
     left: 2%;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.3);
+}
+
+#sideDiv > * {
+    overflow-x:hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
+#topDiv > * {
+    padding: 5px;
 }
 
 #bottomDiv {
@@ -93,8 +122,9 @@ button:hover {
     bottom: 2%;
     left: 2%;
     width: calc(96% - 20px);
-    height: 100px;
+    height: 80px;
     padding: 10px;
+    font-size: 30px;
     background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -118,7 +148,7 @@ input[type="range"]{
     outline: none;
     position: absolute;
     margin: auto;
-    top: 50%;
+    top: 40%;
     bottom: 0;
     background-color: transparent;
     pointer-events: none;
@@ -130,7 +160,7 @@ input[type="range"]{
     height: 5px;
     position: absolute;
     margin: auto;
-    top: 50%;
+    top: 40%;
     bottom: 0;
     border-radius: 5px;
     background-color: #ffffff;

@@ -66,7 +66,7 @@ export class SceneControl {
             this.transactionsGrid.displayTo.label.innerHTML = 
                 "To: " + this.highlightedBlock.node2 
             this.transactionsGrid.displayAmount.label.innerHTML = 
-                "Total: " + this.highlightedBlock.getTransactionsValue();
+                "Transactions Sum: " + this.highlightedBlock.getTransactionsValue();
         }
 
         if(this.isMouseHold && this.transactionsGrid.canDrag) {
@@ -89,6 +89,10 @@ export class SceneControl {
         if(this.highlightedBlock) {
             this.clickedBlock = this.highlightedBlock;
         }
+    }
+
+    onMouseDblClick(event) {
+        
     }
 
     onMouseUp(event) {

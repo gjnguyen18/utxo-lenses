@@ -18,6 +18,12 @@ function getDateObj(value) {
 
 export function initUI(transactionsGrid, data) {
     /* UI */
+    let titleDiv = document.createElement('div');
+    titleDiv.id = "titleDiv";
+    document.body.appendChild(titleDiv);
+
+    let title = new TextBox("title", "titleDiv", "UTXO LENSES");
+
     let sideDiv = document.createElement('div');
     sideDiv.id = "sideDiv";
     document.body.appendChild(sideDiv);
@@ -44,7 +50,7 @@ export function initUI(transactionsGrid, data) {
 
     let text1 = new TextBox("from display", "topDiv", "From: NA");
     transactionsGrid.displayFrom = text1;
-    let text2 = new TextBox("to display", "topDiv", "To: NA");
+    let text2 = new TextBox("to display", "topDiv", "To:   NA");
     transactionsGrid.displayTo = text2;
     let text3 = new TextBox("amount display", "topDiv", "Total: NA");
     transactionsGrid.displayAmount = text3;

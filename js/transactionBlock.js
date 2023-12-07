@@ -21,6 +21,7 @@ export class TransactionsGrid {
         this.displayTo;
         this.displayAmount;
         this.maxRange = 0;
+        this.allTimeMax = 0.01;
     }
 
     addNode(id) {
@@ -96,14 +97,13 @@ export class TransactionsGrid {
         this.blocks = [];
         let nodeArray = Array.from(this.nodes, ([id, node]) => ({id, node}));
         this.maxRange = (nodeArray.length / 2) * (BLOCK_WIDTH + SPACING)
-        let max = 0.001;
 
         for(let i = 0; i < nodeArray.length; i++) {
             this.blocks.push([]);
             for(let k = 0; k < nodeArray.length; k++) {
                 let amount = this.getTransactionsValue(nodeArray[i].id, nodeArray[k].id);
-                if(amount > max) {
-                    max = amount;
+                if(amount > this.allTimeMax) {
+                    this.allTimeMax = amount;
                 }
             }
         }
@@ -112,11 +112,11 @@ export class TransactionsGrid {
             for(let k = 0; k < nodeArray.length; k++) {
                 let transactions = this.getTransactions(nodeArray[i].id, nodeArray[k].id);
                 let amount = this.getTransactionsValue(nodeArray[i].id, nodeArray[k].id);
-                this.blocks[i][k] = new TransactionBlock(nodeArray[i].id, nodeArray[k].id, transactions, amount, max);
+                this.blocks[i][k] = new TransactionBlock(nodeArray[i].id, nodeArray[k].id, transactions, amount, this.allTimeMax);
                 this.blocks[i][k].setPosition(
                     (i - (nodeArray.length / 2)) * (BLOCK_WIDTH + SPACING), 
                     (k - (nodeArray.length / 2)) * (BLOCK_WIDTH + SPACING));
-                this.blocks[i][k].recolor(amount / max);
+                this.blocks[i][k].recolor(amount / this.allTimeMax);
                 this.scene.add(this.blocks[i][k].getCube());
             }
         }
