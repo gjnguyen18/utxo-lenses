@@ -27,7 +27,7 @@ export class TransactionsGrid {
         this.nodes.set(id, new Node(id));
     }
 
-    addTransaction(id1, id2, amount) {
+    addTransaction(id1, id2, amount, time) {
 
         let node1 = this.nodes.get(id1);
         let node2 = this.nodes.get(id2);
@@ -40,7 +40,10 @@ export class TransactionsGrid {
         if(!this.transactions.get(key)) {
             this.transactions.set(key, [])
         }
-        this.transactions.get(key).push(amount);
+        this.transactions.get(key).push({
+            amount: amount, 
+            time: time
+        });
     }
 
     getTransactions(id1, id2) {
@@ -56,7 +59,7 @@ export class TransactionsGrid {
         let transaction = this.transactions.get([id1, id2].toString());
         if(transaction) {
             let sum = 0;
-            transaction.forEach((i) => sum += i);
+            transaction.forEach((i) => sum += i.amount);
             return sum;
         } else {
             return 0;
@@ -64,13 +67,15 @@ export class TransactionsGrid {
     }
 
     loadData(data) {
+        console.log(data)
         data.nodes.forEach((i) => this.addNode(i));
         data.transactions.forEach((t) => {
             if(this.nodes.get(t.from) && this.nodes.get(t.to)) {
                 this.addTransaction(
                     t.from, 
                     t.to, 
-                    t.amount);
+                    t.amount,
+                    t.timestamp);
             }
         })
     }

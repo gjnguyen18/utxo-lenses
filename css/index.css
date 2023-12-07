@@ -3,6 +3,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: "Lucida Console";
 }
 
 /* width */
@@ -59,6 +60,9 @@ button:hover {
     background-color:rgb(165, 165, 165)
 }
 
+#tCont {
+    padding: 10px;
+}
 
 #topDiv {
     color: white;

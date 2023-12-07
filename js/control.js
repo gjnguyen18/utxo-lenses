@@ -113,9 +113,12 @@ export class SceneControl {
             this.selectedDiv.addBlock(displayFrom, displayTo)
             let count = 0;
             this.clickedBlock.transactions.forEach(t => {
-                if(t > 0) {
-                    let text = new TextBox("transaction", "sideDiv", "Amount: " + String(t));
-                    this.selectedDiv.addBlock(text)
+                if(t.amount > 0) {
+                    let transactionContainer = new Container("tCont", "sideDiv", true);
+                    let text = new TextBox("transaction amount", "sideDiv", "Amount: " + String(t.amount));
+                    let text2 = new TextBox("transaction time", "sideDiv", "Time: " + String(t.time));
+                    transactionContainer.addBlock(text,text2);
+                    this.selectedDiv.addBlock(transactionContainer)
                     count += 1;
                 }
             })

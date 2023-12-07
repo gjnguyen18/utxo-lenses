@@ -5,7 +5,6 @@
     that occurred within time frame 
     
     TODO: 
-    add query to page load to add link to data
     change colors
     add timestamps
 */
