@@ -50,14 +50,17 @@ input[type='file'] {
 }
 
 button {
-    border-radius: 2px;
-    border-width: 2px;
-    background-color:rgb(255, 255, 255)
+    background-color:rgb(10, 10, 10);
+    opacity: 0.8;
+    border: none;
+    color: white;
+    font-family: "Lucida Console";
 }
 
 button:hover {
     cursor: pointer;
-    background-color:rgb(165, 165, 165)
+    background-color:rgb(165, 165, 165);
+    transition: 0.3s;
 }
 
 #tCont {
@@ -69,40 +72,80 @@ button:hover {
     width: calc(300px) !important;
     height: 60px;
     position: fixed;
-    top: calc(2%);
-    right: 2%;
+    top: 10px;
+    right: 10px;
     padding: 20px;
     font-size: 50px;
     font-family:Impact;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.3);
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
+#helpDiv {
+    color: white;
+    width: calc(300px) !important;
+    height: 20px;
+    position: fixed;
+    top: 120px;
+    right: 10px;
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+    text-overflow: wrap;
+    background-color: rgba(0, 0, 0, 0.3);
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
+
+#helpDiv:hover {
+    cursor: pointer;
+    background-color:rgb(165, 165, 165);
+    transition: 0.3s;
+}
 
 #topDiv {
     color: white;
     width: calc(700px) !important;
     height: 90px;
     position: fixed;
-    top: calc(2%);
     font-size: 20px;
-    left: 2%;
+    top: 10px;
+    left: 10px;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.3);
+    user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
 }
 
 #sideDiv {
     color: white;
-    width: calc(300px) !important;
-    height: calc(96% - 300px);
+    /* width: calc(300px) !important; */
+    height: calc(100% - 330px);
     position: fixed;
     overflow-x:hidden;
     white-space: nowrap; 
     text-overflow: ellipsis;
-    top: calc(2% + 140px);
-    left: 2%;
+    top: 130px;
+    left: 10px;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.3);
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    transition: 0.3s;
 }
 
 #sideDiv > * {
@@ -119,13 +162,18 @@ button:hover {
     color: white;
     position: fixed;
     text-align: center;
-    bottom: 2%;
-    left: 2%;
-    width: calc(96% - 20px);
-    height: 80px;
-    padding: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 60px);
+    height: 120px;
+    padding: 20px;
     font-size: 30px;
     background-color: rgba(0, 0, 0, 0.3);
+    user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
 }
 
 #Update-div {

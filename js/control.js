@@ -3,6 +3,8 @@ import { Container, TextBox } from './pageElements';
 
 const CAMERA_SPEED = 10;
 const CAMERA_DECEL_SPEED = 0.99;
+const CAMERA_MAX_Y = 30;
+const CAMERA_MIN_Y = 5;
 
 const YEARS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -21,6 +23,7 @@ export class SceneControl {
         this.clickedBlock = null;
         this.selectedBlock = null;
         this.selectedDiv;
+        this.hlLight;
     }
 
     mouseUpdate() {
@@ -86,28 +89,31 @@ export class SceneControl {
     onMouseDown(event) {
         this.mouseUpdate()
         this.isMouseHold = true;
-        if(this.highlightedBlock) {
-            this.clickedBlock = this.highlightedBlock;
-        }
+    }
+
+    onMouseClick(event) {
+        this.mouseUpdate()
     }
 
     onMouseDblClick(event) {
-        
-    }
-
-    onMouseUp(event) {
+        // mouse update
+        this.mouseUpdate()
         this.isMouseHold = false;
         this.transactionsGrid.canDrag = true;
-        if(this.clickedBlock && this.transactionsGrid.canHover && 
-            this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y && this.highlightedBlock) {
-
-            console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
-
+        if(this.clickedBlock && this.transactionsGrid.canHover && this.highlightedBlock) {
             if(this.selectedBlock) {
                 this.selectedBlock.toggleSelect(false);
             }
 
             this.selectedBlock = this.clickedBlock;
+
+            let sideDiv = document.getElementById("sideDiv");
+            sideDiv.style.width = "300px";
+            this.hlLight = new T.PointLight("green", 20, 10, 2);
+            this.hlLight.position.x = this.selectedBlock.getCube().position.x;
+            this.hlLight.position.y = this.selectedBlock.getCube().position.y + 3;
+            this.hlLight.position.z = this.selectedBlock.getCube().position.z;
+            this.scene.add(this.hlLight);
 
             if(this.selectedDiv) {
                 this.selectedDiv.removeDiv();
@@ -115,8 +121,8 @@ export class SceneControl {
 
             // add to side bar
             this.selectedDiv = new Container("transaction select", "sideDiv", true);
-            let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1));
-            let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
+            let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1).substring(0, 20) + "...");
+            let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2).substring(0, 20) + "...");
             this.selectedDiv.addBlock(displayFrom, displayTo)
             let count = 0;
             this.clickedBlock.transactions.sort(function(a, b) {
@@ -143,6 +149,76 @@ export class SceneControl {
 
             this.selectedBlock.toggleSelect(true);
         }
+    }
+
+    onWheelEvent(event) {
+        let dx = event.deltaX;
+        let dy = event.deltaY;
+        // console.log(dx, dy)
+        if(dy > 0 && this.camera.position.y < CAMERA_MAX_Y) {
+            this.camera.position.y += 0.2;
+        } else if (dy < 0 && this.camera.position.y > CAMERA_MIN_Y) {
+            this.camera.position.y -= 0.2;
+        }
+    }
+
+    onMouseUp(event) {
+        this.isMouseHold = false;
+        this.transactionsGrid.canDrag = true;
+        if(this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y) {
+            if(this.clickedBlock) {
+                this.clickedBlock.toggleSelect(false);
+                let sideDiv = document.getElementById("sideDiv");
+                sideDiv.style.width = "0px";
+                this.scene.remove(this.hlLight);
+            }
+            this.clickedBlock = this.highlightedBlock;
+        }
+        // if(this.clickedBlock && this.transactionsGrid.canHover && 
+        //     this.lastMouse.x == this.mouse.x && this.lastMouse.y == this.mouse.y && this.highlightedBlock) {
+
+        //     // console.log("Transaction:", this.clickedBlock.node1, this.clickedBlock.node2, "Amount:", this.clickedBlock.transactions)
+
+        //     if(this.selectedBlock) {
+        //         this.selectedBlock.toggleSelect(false);
+        //     }
+
+        //     this.selectedBlock = this.clickedBlock;
+
+        //     if(this.selectedDiv) {
+        //         this.selectedDiv.removeDiv();
+        //     }
+
+        //     // add to side bar
+        //     this.selectedDiv = new Container("transaction select", "sideDiv", true);
+        //     let displayFrom = new TextBox("transaction from", "sideDiv", "From: " + String(this.clickedBlock.node1));
+        //     let displayTo = new TextBox("transaction to", "sideDiv", "To: " + String(this.clickedBlock.node2));
+        //     this.selectedDiv.addBlock(displayFrom, displayTo)
+        //     let count = 0;
+        //     this.clickedBlock.transactions.sort(function(a, b) {
+        //         return new Date(b.time) - new Date(a.time);
+        //     });
+        //     this.clickedBlock.transactions.forEach(t => {
+        //         if(t.amount > 0) {
+        //             let transactionContainer = new Container("tCont", "sideDiv", true);
+        //             let text = new TextBox("transaction amount", "sideDiv", "Amount: " + String(t.amount));
+        //             let date = new Date(t.time);
+        //             let text2 = new TextBox("transaction time", "sideDiv", "Time: " + 
+        //                 String(date.getMonth()) + "-" + String(date.getDay()) + "-" + String(date.getFullYear()));
+        //             transactionContainer.addBlock(text,text2);
+        //             this.selectedDiv.addBlock(transactionContainer)
+        //             count += 1;
+        //         }
+        //     })
+        //     if(count == 0) {
+        //         let transactionContainer = new Container("tCont", "sideDiv", true);
+        //         let text = new TextBox("transaction", "sideDiv", "Amount: NA");
+        //         transactionContainer.addBlock(text);
+        //         this.selectedDiv.addBlock(transactionContainer)
+        //     }
+
+        //     this.selectedBlock.toggleSelect(true);
+        // }
     }
 
     update() {

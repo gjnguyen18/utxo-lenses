@@ -23,6 +23,8 @@ export function startScene() {
 	// default file
 	let file = "https://raw.githubusercontent.com/gjnguyen18/utxo-lenses/master/transformed_data2.json"
 
+	console.log(encodeURIComponent("http://127.0.0.1:5501/api/v1/?startTime=2022-11-01T00:00:00Z&endTime=2023-11-30T23:59:59Z"))
+
 	// if query contains link, use that instead
 	let urlSearchParams = new URLSearchParams(window.location.search);
 	let params = Object.fromEntries(urlSearchParams.entries());
@@ -35,7 +37,6 @@ export function startScene() {
 		transactionsGrid.loadData(data);
 		// display grid
 		transactionsGrid.setBlocks();
-
 		// UI init
 		initUI(transactionsGrid, data);
 	})
@@ -50,10 +51,22 @@ export function startScene() {
 	function onMouseUp(event) {
 		control.onMouseUp(event);
 	}
+	function onWheelEvent(event) {
+		control.onWheelEvent(event);
+	}
+	function onMouseDblClick(event) {
+		control.onMouseDblClick(event);
+	}
+	function onMouseClick(event) {
+		control.onMouseClick(event);
+	}
 
 	window.addEventListener('mousemove', onMouseMove, false);
 	document.body.addEventListener('mousedown', onMouseDown, true);
 	document.body.addEventListener('mouseup', onMouseUp, true);
+	document.body.addEventListener('wheel', onWheelEvent, true);
+	document.body.addEventListener('dblclick', onMouseDblClick, true);
+	document.body.addEventListener('click', onMouseClick, true);
 
 	function animate() {
 		requestAnimationFrame(animate);

@@ -19,9 +19,20 @@ async function fetchDataFromAPI(file) {
     }
 }
 
+/*
+
+http://localhost:5173/?link=https://0d09-76-78-246-51.ngrok-free.app/api/v1/?startTime=2023-11-01T00:00:00Z&endTime=2023-11-30T23:59:59Z
+
+*/
+
 export async function getData(file, afterFunction = (data) => { }) {
     try {
+
+        console.log(file);
+
         const apiData = await fetchDataFromAPI(file);
+
+        console.log(apiData);
 
         // Process the API data as needed
         const nodes = apiData.data.users;

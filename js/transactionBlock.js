@@ -2,8 +2,8 @@ import * as T from 'three';
 import { getColorFromRamp } from './helpers';
 
 const COLORS = [new T.Color(0, 0.5, 1), new T.Color(0.5, 0.5, 0), new T.Color(1, 0, 0)];
-const SELECT_COLOR = new T.Color(0.8, 0.8, 1);
-const SELECT_COLOR_HL = new T.Color(1, 1, 1);
+const SELECT_COLOR = new T.Color(0.2, 0.7, 0.3);
+const SELECT_COLOR_HL = new T.Color(0.2, 1, 0.5);
 const BLOCK_WIDTH = 1.0;
 const SPACING = 0.3;
 const MIN_HEIGHT = 0.5;
